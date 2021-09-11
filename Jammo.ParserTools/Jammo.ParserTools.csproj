@@ -2,6 +2,15 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Description>Tools I use frequently for text parsing</Description>
+        <RepositoryUrl>https://github.com/Jammo-NET/Jammo.ParserTools</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageReleaseNotes>Add IParserStream interface</PackageReleaseNotes>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>Jammo.ParserTools</Title>
+        <Authors>zeplar exe</Authors>
+        <PackageLicenseUrl>https://github.com/Jammo-NET/Jammo.ParserTools/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageVersion>1.1.0</PackageVersion>
     </PropertyGroup>
 
 </Project>
