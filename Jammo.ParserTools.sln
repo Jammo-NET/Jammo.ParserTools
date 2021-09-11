@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jammo.ParserTools", "Jammo.ParserTools\Jammo.ParserTools.csproj", "{BCBCBC20-EEFD-4B35-8C79-229628FB6CE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jammo.ParserTools-Tests", "Jammo.ParserTools-Tests\Jammo.ParserTools-Tests.csproj", "{3AC4FB01-46BF-41B4-827A-E31D92E13DFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BCBCBC20-EEFD-4B35-8C79-229628FB6CE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCBCBC20-EEFD-4B35-8C79-229628FB6CE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBCBC20-EEFD-4B35-8C79-229628FB6CE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCBCBC20-EEFD-4B35-8C79-229628FB6CE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AC4FB01-46BF-41B4-827A-E31D92E13DFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AC4FB01-46BF-41B4-827A-E31D92E13DFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AC4FB01-46BF-41B4-827A-E31D92E13DFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AC4FB01-46BF-41B4-827A-E31D92E13DFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
