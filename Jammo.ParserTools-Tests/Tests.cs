@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Jammo.ParserTools;
 using NUnit.Framework;
@@ -23,6 +24,33 @@ namespace Jammo.ParserTools_Tests
             var groups = new Tokenizer(testString).Group();
             
             Assert.True(groups.First().ToString() == nestedText);
+        }
+
+        [Test]
+        public void TestAlphaNumeric()
+        {
+            var testString = "abc123";
+            var tokenizer = new Tokenizer(testString);
+            
+            Assert.True(tokenizer.Next().Type == BasicTokenType.Alphabetical);
+        }
+
+        [Test]
+        public void TestAlphabetic()
+        {
+            var testString = "abc";
+            var tokenizer = new Tokenizer(testString);
+            
+            Assert.True(tokenizer.Next().Type == BasicTokenType.Alphabetical);
+        }
+
+        [Test]
+        public void TestNumeric()
+        {
+            var testString = "aaa 123";
+            var tokenizer = Tokenizer.Tokenize(testString).ToArray();
+            
+            Assert.True(tokenizer[2].Type == BasicTokenType.Numerical);
         }
     }
 }

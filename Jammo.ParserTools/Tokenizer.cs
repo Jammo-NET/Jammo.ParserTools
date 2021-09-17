@@ -134,7 +134,7 @@ namespace Jammo.ParserTools
                         new IndexSpan(Index, charIndex));
                 }
                 else if (char.IsLetter(character) &&
-                    char.IsLetter(currentRead.LastOrDefault()) || string.IsNullOrEmpty(currentRead))
+                    (char.IsLetter(currentRead.LastOrDefault()) || string.IsNullOrEmpty(currentRead)))
                 {
                     currentTokenType = BasicTokenType.Alphabetical;
                     currentRead += character;
@@ -145,7 +145,8 @@ namespace Jammo.ParserTools
                          string.IsNullOrEmpty(currentRead)) &&
                          !char.IsPunctuation(character))
                 { // Allow abc123
-                    if (char.IsLetter(currentRead.LastOrDefault()))
+                    if (char.IsLetter(currentRead.LastOrDefault()) ||
+                        char.IsNumber(currentRead.LastOrDefault()) && currentTokenType == BasicTokenType.Alphabetical)
                         currentTokenType = BasicTokenType.Alphabetical;
                     else
                         currentTokenType = BasicTokenType.Numerical;
