@@ -15,6 +15,14 @@ A library of tools I frequently use when parsing text
 A take on IEnumerable which allows for manual .Next calls (moves the iterator forward)
 The tokenizer class provides BasicToken(s) based on input data
 
+## Lexer
+
+### Constructors:
+
+` Lexer: (new) Lexer(tokenizer)`, `IEnumerable<LexerToken> Lexer.Lex(input, [tokenizer-options])`
+
+Provides a basic enum based wrapper for tokenization.
+
 ## StateMachine
 
 ### Constructors:
