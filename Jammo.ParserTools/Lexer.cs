@@ -7,7 +7,7 @@ namespace Jammo.ParserTools
 {
     public class Lexer : IEnumerable<LexerToken>
     {
-        private Tokenizer tokenizer;
+        private readonly Tokenizer tokenizer;
         
         public Lexer(Tokenizer tokenizer)
         {
@@ -39,7 +39,9 @@ namespace Jammo.ParserTools
 
         public LexerToken Next()
         {
-            return PeekNext();
+            var token = tokenizer.Next();
+
+            return token == null ? null : new LexerToken(token, GetIdFromToken(token));
         }
 
         public LexerToken PeekNext()
@@ -86,7 +88,8 @@ namespace Jammo.ParserTools
                     "%" => LexerTokenId.Percent,
                     "^" => LexerTokenId.Caret,
                     "&" => LexerTokenId.Amphersand,
-                    "|" => LexerTokenId.Horizontal,
+                    "|" => LexerTokenId.Vertical,
+                    "_" => LexerTokenId.Underscore,
                     _ => LexerTokenId.Unknown
                 };
             }
@@ -147,7 +150,7 @@ namespace Jammo.ParserTools
         
         Alphabetic, AlphaNumeric, Numeric,
         
-        Plus, Minus, Star,
+        Plus, Minus, Star, Equals,
         Slash, Backslash,
         
         NewLine, Space,
@@ -167,6 +170,7 @@ namespace Jammo.ParserTools
         Percent,
         Caret,
         Amphersand,
-        Horizontal,
+        Underscore,
+        Vertical
     }
 }

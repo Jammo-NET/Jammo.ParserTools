@@ -22,5 +22,14 @@ namespace Jammo.ParserTools_Tests
             
             Assert.True(tokens.First().Is(LexerTokenId.Quote));
         }
+
+        [Test]
+        public void TestEnumeration()
+        {
+            var lexer = new Lexer(new Tokenizer("Some Text"));
+            var count = lexer.Count();
+            
+            Assert.True(count == 3);
+        }
     }
 }
