@@ -5,7 +5,8 @@ using NUnit.Framework;
 
 namespace Jammo.ParserTools_Tests
 {
-    public class Tests
+    [TestFixture]
+    public class TokenizerTests
     {
         [Test]
         public void TestTokenizer()
