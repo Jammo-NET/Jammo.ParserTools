@@ -1,6 +1,6 @@
 # Jammo.ParserTools
 
-Nuget: https://www.nuget.org/packages/Jammo.ParserTools/1.1.2
+Nuget: https://www.nuget.org/packages/Jammo.ParserTools/
 
 A library of tools I frequently use when parsing text
 
