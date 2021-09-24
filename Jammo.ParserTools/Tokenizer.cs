@@ -21,14 +21,7 @@ namespace Jammo.ParserTools
 
         public static IEnumerable<BasicToken> Tokenize(string input, TokenizerOptions options = null)
         {
-            var tokens = new List<BasicToken>();
-            var tokenizer = new Tokenizer(input, options);
-            
-            BasicToken token;
-            while ((token = tokenizer.Next()) != null)
-                tokens.Add(token);
-
-            return tokens;
+            return new Tokenizer(input, options);
         }
         
         public IEnumerable<BasicTokenGroup> Group()
@@ -89,6 +82,24 @@ namespace Jammo.ParserTools
             return groups;
         }
 
+        public void Skip(int count = 1)
+        {
+            for (var c = 0; c < count; c++)
+            {
+                if (Next() == null)
+                    break;
+            }
+        }
+
+        public void SkipWhile(Func<BasicToken, bool> predicate)
+        {
+            foreach (var token in this)
+            {
+                if (!predicate.Invoke(token))
+                    break;
+            }
+        }
+
         public BasicToken Next()
         {
             var token = PeekNext();
@@ -100,6 +111,9 @@ namespace Jammo.ParserTools
 
         public BasicToken PeekNext()
         {
+            if (text.Length == Index)
+                return null;
+            
             var currentRead = string.Empty;
             var currentTokenType = BasicTokenType.Unhandled;
 
