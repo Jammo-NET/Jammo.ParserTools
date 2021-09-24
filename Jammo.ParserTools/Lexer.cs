@@ -103,8 +103,6 @@ namespace Jammo.ParserTools
                     "\"" => LexerTokenId.DoubleQuote,
                     _ => LexerTokenId.Unknown
                 };
-
-                return LexerTokenId.Unknown;
             }
 
             if (token.Type == BasicTokenType.Whitespace)
