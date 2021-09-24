@@ -64,57 +64,44 @@ namespace Jammo.ParserTools
             if (token.Type == BasicTokenType.Numerical)
                 return LexerTokenId.Numeric;
             
-            if (token.Type == BasicTokenType.Symbol)
-            {
-                return token.Text switch
-                {
-                    "+" => LexerTokenId.Plus,
-                    "-" => LexerTokenId.Minus,
-                    "*" => LexerTokenId.Star,
-                    "(" => LexerTokenId.LeftParenthesis,
-                    ")" => LexerTokenId.RightParenthesis,
-                    "[" => LexerTokenId.OpenBracket,
-                    "]" => LexerTokenId.CloseBracket,
-                    "{" => LexerTokenId.OpenCurlyBracket,
-                    "}" => LexerTokenId.CloseCurlyBracket,
-                    "/" => LexerTokenId.Slash,
-                    "\\" => LexerTokenId.Backslash,
-                    "~" => LexerTokenId.Tilde,
-                    "`" => LexerTokenId.Slave,
-                    "!" => LexerTokenId.Exclamation,
-                    "@" => LexerTokenId.At,
-                    "#" => LexerTokenId.Octothorpe,
-                    "$" => LexerTokenId.Dollar,
-                    "%" => LexerTokenId.Percent,
-                    "^" => LexerTokenId.Caret,
-                    "&" => LexerTokenId.Amphersand,
-                    "|" => LexerTokenId.Vertical,
-                    "_" => LexerTokenId.Underscore,
-                    _ => LexerTokenId.Unknown
-                };
-            }
-            
-            if (token.Type == BasicTokenType.Punctuation)
-            {
-                return token.Text switch
-                {
-                    "." => LexerTokenId.Period,
-                    "," => LexerTokenId.Comma,
-                    ":" => LexerTokenId.Colon,
-                    ";" => LexerTokenId.Semicolon,
-                    "'" => LexerTokenId.Quote,
-                    "\"" => LexerTokenId.DoubleQuote,
-                    _ => LexerTokenId.Unknown
-                };
-            }
-
             if (token.Type == BasicTokenType.Whitespace)
                 return LexerTokenId.Space;
             
             if (token.Type == BasicTokenType.Newline)
                 return LexerTokenId.NewLine;
-
-            return LexerTokenId.Unknown;
+            
+            return token.Text switch
+            {
+                "+" => LexerTokenId.Plus,
+                "-" => LexerTokenId.Minus,
+                "*" => LexerTokenId.Star,
+                "(" => LexerTokenId.LeftParenthesis,
+                ")" => LexerTokenId.RightParenthesis,
+                "[" => LexerTokenId.OpenBracket,
+                "]" => LexerTokenId.CloseBracket,
+                "{" => LexerTokenId.OpenCurlyBracket,
+                "}" => LexerTokenId.CloseCurlyBracket,
+                "/" => LexerTokenId.Slash,
+                "\\" => LexerTokenId.Backslash,
+                "~" => LexerTokenId.Tilde,
+                "`" => LexerTokenId.Slave,
+                "!" => LexerTokenId.Exclamation,
+                "@" => LexerTokenId.At,
+                "#" => LexerTokenId.Octothorpe,
+                "$" => LexerTokenId.Dollar,
+                "%" => LexerTokenId.Percent,
+                "^" => LexerTokenId.Caret,
+                "&" => LexerTokenId.Amphersand,
+                "|" => LexerTokenId.Vertical,
+                "_" => LexerTokenId.Underscore,
+                "." => LexerTokenId.Period,
+                "," => LexerTokenId.Comma,
+                ":" => LexerTokenId.Colon,
+                ";" => LexerTokenId.Semicolon,
+                "'" => LexerTokenId.Quote,
+                "\"" => LexerTokenId.DoubleQuote,
+                _ => LexerTokenId.Unknown
+            };
         }
 
         public IEnumerator<LexerToken> GetEnumerator()
@@ -142,6 +129,11 @@ namespace Jammo.ParserTools
         }
 
         public bool Is(LexerTokenId id) => Id == id;
+
+        public override string ToString()
+        {
+            return Token.ToString();
+        }
     }
 
     public enum LexerTokenId

@@ -31,5 +31,13 @@ namespace Jammo.ParserTools_Tests
             
             Assert.True(count == 3);
         }
+
+        [Test]
+        public void TestLeftParenthesisId()
+        {
+            var tokens = Lexer.Lex("(");
+            
+            Assert.True(tokens.First().Is(LexerTokenId.LeftParenthesis));
+        }
     }
 }
