@@ -72,9 +72,12 @@ namespace Jammo.ParserTools
             
             return token.Text switch
             {
+                "=" => LexerTokenId.Equals,
                 "+" => LexerTokenId.Plus,
                 "-" => LexerTokenId.Minus,
                 "*" => LexerTokenId.Star,
+                "<" => LexerTokenId.LessThan,
+                ">" => LexerTokenId.GreaterThan,
                 "(" => LexerTokenId.LeftParenthesis,
                 ")" => LexerTokenId.RightParenthesis,
                 "[" => LexerTokenId.OpenBracket,
@@ -100,6 +103,7 @@ namespace Jammo.ParserTools
                 ";" => LexerTokenId.Semicolon,
                 "'" => LexerTokenId.Quote,
                 "\"" => LexerTokenId.DoubleQuote,
+                "?" => LexerTokenId.QuestionMark,
                 _ => LexerTokenId.Unknown
             };
         }
@@ -142,7 +146,7 @@ namespace Jammo.ParserTools
         
         Alphabetic, AlphaNumeric, Numeric,
         
-        Plus, Minus, Star, Equals,
+        Plus, Minus, Star, Equals, LessThan, GreaterThan,
         Slash, Backslash,
         
         NewLine, Space,
@@ -163,6 +167,7 @@ namespace Jammo.ParserTools
         Caret,
         Amphersand,
         Underscore,
-        Vertical
+        Vertical,
+        QuestionMark
     }
 }
