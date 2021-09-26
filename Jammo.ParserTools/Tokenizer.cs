@@ -23,64 +23,6 @@ namespace Jammo.ParserTools
         {
             return new Tokenizer(input, options);
         }
-        
-        public IEnumerable<BasicTokenGroup> Group()
-        {
-            var groups = new List<BasicTokenGroup>();
-
-            BasicToken currentToken;
-            while ((currentToken = Next()) != null)
-            {
-                BasicTokenGroup group = new TextGroup();
-                string closingText = null;
-
-                switch (currentToken.Text)
-                {
-                    case "(":
-                        group = new ParenthesisGroup();
-                        closingText = ")";
-                        break;
-                    case "[":
-                        group = new BracketGroup();
-                        closingText = "]";
-                        break;
-                    case "{":
-                        group = new CurlyBracketGroup();
-                        closingText = "}";
-                        break;
-                    case "<":
-                        group = new AngleBracketGroup();
-                        closingText = ">";
-                        break;
-                    case "\"":
-                        group = new DoubleQuoteGroup();
-                        closingText = "\"";
-                        break;
-                    case "\'":
-                        group = new SingleQuoteGroup();
-                        closingText = "\'";
-                        break;
-                    default:
-                        group.Add(currentToken);
-                        break;
-                }
-
-                if (closingText == null)
-                    continue;
-            
-                while ((currentToken = Next()) != null)
-                {
-                    if (currentToken.Text == closingText)
-                        break;
-                        
-                    group.Add(currentToken);
-                }
-            
-                groups.Add(group);
-            }
-
-            return groups;
-        }
 
         public void Skip(int count = 1)
         {

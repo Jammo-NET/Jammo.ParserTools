@@ -17,17 +17,6 @@ namespace Jammo.ParserTools_Tests
         }
 
         [Test]
-        public void TestTokenGrouper()
-        {
-            var nestedText = "My Grouped Text";
-            var testString = $"({nestedText})";
-
-            var groups = new Tokenizer(testString).Group();
-            
-            Assert.True(groups.First().ToString() == nestedText);
-        }
-
-        [Test]
         public void TestAlphaNumeric()
         {
             var testString = "abc123";

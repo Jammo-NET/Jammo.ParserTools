@@ -39,5 +39,28 @@ namespace Jammo.ParserTools_Tests
             
             Assert.True(tokens.First().Is(LexerTokenId.LeftParenthesis));
         }
+
+        [Test]
+        public void TestIdentifier()
+        {
+            var options = new LexerOptions
+            {
+                TokenizeIdentifiers = true,
+
+                IdentifierStarts = new[]
+                {
+                    LexerTokenId.AlphaNumeric, LexerTokenId.Alphabetic, LexerTokenId.Underscore
+                },
+
+                IdentifierIds = new[]
+                {
+                    LexerTokenId.AlphaNumeric, LexerTokenId.Alphabetic, LexerTokenId.Numeric, LexerTokenId.Underscore
+                }
+            };
+
+            var tokens = Lexer.Lex("_abc123=AAAAAAAAAAAAAa 123_=...", options);
+            
+            Assert.True(tokens.Count(t => t.Is(LexerTokenId.Identifier)) == 1);
+        }
     }
 }
