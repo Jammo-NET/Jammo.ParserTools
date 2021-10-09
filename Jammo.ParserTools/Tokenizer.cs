@@ -24,6 +24,11 @@ namespace Jammo.ParserTools
             return new Tokenizer(input, options);
         }
 
+        public void Reset()
+        {
+            Index = 0;
+        }
+
         public void Skip(int count = 1)
         {
             for (var c = 0; c < count; c++)
@@ -35,17 +40,20 @@ namespace Jammo.ParserTools
 
         public void SkipWhile(Func<BasicToken, bool> predicate)
         {
-            foreach (var token in this)
+            BasicToken token;
+            while ((token = PeekNext()) != null)
             {
                 if (!predicate.Invoke(token))
                     break;
+
+                Next();
             }
         }
 
         public BasicToken Next()
         {
             var token = PeekNext();
-
+            
             Index += token?.Text.Length ?? 0;
             
             return token;
@@ -55,84 +63,74 @@ namespace Jammo.ParserTools
         {
             if (text.Length == Index)
                 return null;
-            
+
+            var trimmed = string.Concat(text.Skip(Index));
+            var first = trimmed.First();
             var currentRead = string.Empty;
-            var currentTokenType = BasicTokenType.Unhandled;
 
-            for (var charIndex = Index; charIndex < text.Length; charIndex++)
+            if (char.IsPunctuation(first))
             {
-                var character = text[charIndex];
+                return new BasicToken(first.ToString(),
+                    BasicTokenType.Punctuation, new IndexSpan(Index, Index + 1));
+            }
+            
+            if (char.IsSymbol(first))
+            {
+                return new BasicToken(first.ToString(),
+                    BasicTokenType.Symbol, new IndexSpan(Index, Index + 1));
+            }
 
-                if (char.IsWhiteSpace(character) &&
-                    (char.IsWhiteSpace(currentRead.LastOrDefault()) || string.IsNullOrEmpty(currentRead)))
+            if (char.IsWhiteSpace(first))
+            {
+                foreach (var character in trimmed)
                 {
-                    currentTokenType = BasicTokenType.Whitespace;
+                    if (!char.IsWhiteSpace(character))
+                        break;
+                    
                     currentRead += character;
-
+                    
                     if (currentRead == Environment.NewLine)
                         return new BasicToken(
                             currentRead,
                             BasicTokenType.Newline,
-                            new IndexSpan(Index, charIndex));
+                            new IndexSpan(Index, Index + currentRead.Length));
                 }
-                else if (char.IsPunctuation(character) && string.IsNullOrEmpty(currentRead))
-                {
-                    return new BasicToken(
-                        character.ToString(),
-                        BasicTokenType.Punctuation,
-                        new IndexSpan(Index, charIndex));
-                }
-                else if (char.IsSymbol(character) && string.IsNullOrEmpty(currentRead))
-                {
-                    return new BasicToken(
-                        character.ToString(),
-                        BasicTokenType.Symbol,
-                        new IndexSpan(Index, charIndex));
-                }
-                else if (char.IsLetter(character) &&
-                    (char.IsLetter(currentRead.LastOrDefault()) || string.IsNullOrEmpty(currentRead)))
-                {
-                    currentTokenType = BasicTokenType.Alphabetical;
-                    currentRead += character;
-                }
-                else if (char.IsNumber(character) &&
-                         (char.IsLetter(currentRead.LastOrDefault()) || 
-                         char.IsNumber(currentRead.LastOrDefault()) ||
-                         string.IsNullOrEmpty(currentRead)) &&
-                         !char.IsPunctuation(character))
-                { // Allow abc123
-                    if (char.IsLetter(currentRead.LastOrDefault()) ||
-                        char.IsNumber(currentRead.LastOrDefault()) && currentTokenType == BasicTokenType.Alphabetical)
-                        currentTokenType = BasicTokenType.Alphabetical;
-                    else
-                        currentTokenType = BasicTokenType.Numerical;
-                    
-                    currentRead += character;
-                }
-                else
-                {
-                    if (options.Ignorable.Contains(currentTokenType))
-                    {
-                        Index += currentRead.Last();
-                        
-                        return PeekNext();
-                    }
-
-                    return new BasicToken(currentRead, currentTokenType, new IndexSpan(Index, charIndex));
-                }
-            }
-
-            if (string.IsNullOrEmpty(currentRead))
-                return null;
+                
+                return new BasicToken(
+                    currentRead,
+                    BasicTokenType.Whitespace, 
+                    new IndexSpan(Index, Index + currentRead.Length));
+            } 
             
-            if (options.Ignorable.Contains(currentTokenType))
+            if (char.IsLetter(first))
             {
-                Index += currentRead.Last();
-                        
-                return PeekNext();
+                foreach (var character in trimmed)
+                {
+                    if (char.IsLetter(character))
+                        currentRead += character;
+                    else if (char.IsNumber(character) && !options.SeparateAlphanumerical)
+                        currentRead += character;
+                    else
+                        break;
+                }
+                
+                return new BasicToken(
+                    currentRead,
+                    BasicTokenType.Alphabetical, 
+                    new IndexSpan(Index, Index + currentRead.Length));
             }
             
-            return new BasicToken(currentRead, currentTokenType, new IndexSpan(Index, text.Length - 1));
+            if (char.IsNumber(first))
+            {
+                currentRead += string.Concat(trimmed.TakeWhile(char.IsNumber));
+
+                return new BasicToken(
+                    currentRead,
+                    BasicTokenType.Numerical, 
+                    new IndexSpan(Index, Index + currentRead.Length));
+            }
+
+            return new BasicToken(first.ToString(), BasicTokenType.Unhandled, new IndexSpan(Index, Index + 1));
         }
 
         public IEnumerator<BasicToken> GetEnumerator()
@@ -177,6 +175,7 @@ namespace Jammo.ParserTools
     
     public class TokenizerOptions
     {
+        public bool SeparateAlphanumerical;
         public readonly BasicTokenType[] Ignorable;
 
         public TokenizerOptions(params BasicTokenType[] ignorable)

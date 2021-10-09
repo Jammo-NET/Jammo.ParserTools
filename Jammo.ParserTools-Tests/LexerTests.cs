@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Jammo.ParserTools;
 using NUnit.Framework;
@@ -27,9 +28,8 @@ namespace Jammo.ParserTools_Tests
         public void TestEnumeration()
         {
             var lexer = new Lexer(new Tokenizer("Some Text"));
-            var count = lexer.Count();
             
-            Assert.True(count == 3);
+            Assert.True(lexer.Count() == 3);
         }
 
         [Test]
@@ -43,24 +43,20 @@ namespace Jammo.ParserTools_Tests
         [Test]
         public void TestIdentifier()
         {
-            var options = new LexerOptions
-            {
-                TokenizeIdentifiers = true,
-
-                IdentifierStarts = new[]
-                {
-                    LexerTokenId.AlphaNumeric, LexerTokenId.Alphabetic, LexerTokenId.Underscore
-                },
-
-                IdentifierIds = new[]
-                {
-                    LexerTokenId.AlphaNumeric, LexerTokenId.Alphabetic, LexerTokenId.Numeric, LexerTokenId.Underscore
-                }
-            };
-
+            var options = new LexerOptions { IncludeUnderscoreAsAlphabetic = true };
             var tokens = Lexer.Lex("_abc123=AAAAAAAAAAAAAa 123_=...", options);
             
-            Assert.True(tokens.Count(t => t.Is(LexerTokenId.Identifier)) == 1);
+            Assert.True(tokens.First().RawToken == "_abc123");
+        }
+
+
+        [Test]
+        public void TestDecimal()
+        {
+            var options = new LexerOptions { IncludePeriodAsNumeric = true };
+            var tokens = Lexer.Lex("12.34", options);
+            
+            Assert.True(tokens.First().RawToken == "12.34");
         }
     }
 }
