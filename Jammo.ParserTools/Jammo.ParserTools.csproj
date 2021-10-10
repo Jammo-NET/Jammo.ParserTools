@@ -5,17 +5,15 @@
         <Description>Tools I use frequently for text parsing</Description>
         <RepositoryUrl>https://github.com/Jammo-NET/Jammo.ParserTools</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Some lexer improvements
+        <PackageReleaseNotes>Small bugfix
 
-Add some missing characters (=, &lt;, &gt;, and ?)
-Add more lexer constructors
-Add LexerOptions
-Add identifier lexing support</PackageReleaseNotes>
+Fix alphabetic matching inaccuracies
+LexerToken.ToString now returns RawToken instead of Token.ToString</PackageReleaseNotes>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Jammo.ParserTools</Title>
         <Authors>zeplar exe</Authors>
         <PackageLicenseUrl>https://github.com/Jammo-NET/Jammo.ParserTools/blob/master/LICENSE</PackageLicenseUrl>
-        <PackageVersion>1.2</PackageVersion>
+        <PackageVersion>1.2.2</PackageVersion>
         <LangVersion>9</LangVersion>
     </PropertyGroup>
 

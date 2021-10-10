@@ -9,7 +9,7 @@ namespace Jammo.ParserTools
     public class Lexer : IEnumerable<LexerToken>
     {
         private readonly LexerOptions options;
-        
+
         public Tokenizer Tokenizer { get; }
         
         public Lexer(string text)
@@ -107,8 +107,8 @@ namespace Jammo.ParserTools
                     {
                         if (token.Text == "_" && !options.IncludeUnderscoreAsAlphabetic)
                             return new LexerToken(token, LexerTokenId.Underscore);
-                        
-                        if (!options.IncludeUnderscoreAsAlphabetic)
+
+                        if (token.Text != "_")
                             return new LexerToken(token, SymbolIdFromBasicToken(token));
                     }
 
@@ -286,7 +286,7 @@ namespace Jammo.ParserTools
 
         public override string ToString()
         {
-            return Token.ToString();
+            return RawToken;
         }
     }
 

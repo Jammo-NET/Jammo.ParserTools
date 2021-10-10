@@ -58,5 +58,13 @@ namespace Jammo.ParserTools_Tests
             
             Assert.True(tokens.First().RawToken == "12.34");
         }
+
+        [Test]
+        public void TestDoubleQuote()
+        {
+            var tokens = Lexer.Lex("Hello \"world\"");
+            
+            Assert.True(tokens.First().RawToken == "Hello");
+        }
     }
 }
