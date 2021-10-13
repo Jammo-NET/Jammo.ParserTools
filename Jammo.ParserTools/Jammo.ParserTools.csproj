@@ -5,12 +5,12 @@
         <Description>Tools I use frequently for text parsing</Description>
         <RepositoryUrl>https://github.com/Jammo-NET/Jammo.ParserTools</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Add EnumerableNavigoator, provides bi-directional enumeration of an IEnumerable using Next and Last methods</PackageReleaseNotes>
+        <PackageReleaseNotes>Fix a bug with numeric values where every number in the string was selected</PackageReleaseNotes>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Jammo.ParserTools</Title>
         <Authors>zeplar exe</Authors>
         <PackageLicenseUrl>https://github.com/Jammo-NET/Jammo.ParserTools/blob/master/LICENSE</PackageLicenseUrl>
-        <PackageVersion>1.3.2</PackageVersion>
+        <PackageVersion>1.3.1</PackageVersion>
         <LangVersion>9</LangVersion>
     </PropertyGroup>
 

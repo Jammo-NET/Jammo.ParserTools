@@ -20,7 +20,7 @@ namespace Jammo.ParserTools
         
         public Lexer(string text, LexerOptions lexerOptions)
         {
-            Tokenizer = new Tokenizer(text, null);
+            Tokenizer = new Tokenizer(text);
             options = lexerOptions ?? new LexerOptions();
         }
 
@@ -166,6 +166,8 @@ namespace Jammo.ParserTools
                                 
                                 return new LexerToken(relevantTokens.ToString(), LexerTokenId.Numeric);
                             }
+                            default:
+                                return new LexerToken(relevantTokens.ToString(), LexerTokenId.Numeric);
                         }
 
                         Tokenizer.Next();

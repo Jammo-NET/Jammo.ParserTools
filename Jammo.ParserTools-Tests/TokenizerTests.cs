@@ -42,5 +42,14 @@ namespace Jammo.ParserTools_Tests
             
             Assert.True(tokenizer[2].Type == BasicTokenType.Numerical);
         }
+        
+        [Test]
+        public void TestMultiNumeric()
+        {
+            var testString = "aaa 123 bbb 456";
+            var tokenizer = Tokenizer.Tokenize(testString).ToArray();
+            
+            Assert.True(tokenizer[2].ToString() == "123");
+        }
     }
 }
