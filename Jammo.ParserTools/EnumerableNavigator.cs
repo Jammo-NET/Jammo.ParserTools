@@ -7,10 +7,22 @@ namespace Jammo.ParserTools
     public class EnumerableNavigator<T>
     {
         private readonly T[] array;
-        private int index;
 
-        public T Current => array[index];
-        public bool AtEnd => index >= array.Length - 1;
+        public int Index { get; private set; } = -1;
+        public bool Started => Index > -1;
+
+        public T Current
+        {
+            get
+            {
+                if (!Started)
+                    throw new InvalidOperationException("Enumeration has not started.");
+
+                return array[Index];
+            }
+        }
+
+        public bool AtEnd => Index >= array.Length - 1;
 
         public EnumerableNavigator(IEnumerable<T> enumerable)
         {
@@ -19,12 +31,16 @@ namespace Jammo.ParserTools
         
         public void Reset()
         {
-            index = 0;
+            Index = -1;
         }
 
         public void Skip(int count = 1)
         {
-            index = Math.Clamp(index + count, 0, array.Length - 1);
+            for (var c = 0; c <= count; c++)
+            {
+                if (!TryMoveNext(out _))
+                    break;
+            }
         }
 
         public void SkipWhile(Func<T, bool> predicate)
@@ -77,6 +93,12 @@ namespace Jammo.ParserTools
                 yield return item;
         }
 
+        public IEnumerable<T> EnumerateFromIndex()
+        {
+            while (TryMoveNext(out var item))
+                yield return item;
+        }
+
         public IEnumerable<T> EnumerateOnce()
         {
             foreach (var item in array)
@@ -90,7 +112,7 @@ namespace Jammo.ParserTools
             if (AtEnd)
                 return false;
 
-            result = array[index + 1];
+            result = array[Index + 1];
             
             return true;
         }
@@ -99,7 +121,7 @@ namespace Jammo.ParserTools
         {
             if (TryPeekNext(out result))
             {
-                index++;
+                Index++;
                 
                 return true;
             }
@@ -111,10 +133,10 @@ namespace Jammo.ParserTools
         {
             result = default;
             
-            if (index == 0)
+            if (!Started || Index == 0)
                 return false;
             
-            result = array[index - 1];
+            result = array[Index - 1];
             return true;
         }
 
@@ -122,7 +144,7 @@ namespace Jammo.ParserTools
         {
             if (TryPeekLast(out result))
             {
-                index--;
+                Index--;
 
                 return true;
             }

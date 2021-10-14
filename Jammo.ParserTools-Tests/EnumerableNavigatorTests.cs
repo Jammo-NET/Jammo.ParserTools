@@ -8,28 +8,29 @@ namespace Jammo.ParserTools_Tests
     [TestFixture]
     public class EnumerableNavigatorTests
     {
-        private readonly int[] array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        private EnumerableNavigator<int> navigator;
+        private static readonly int[] TestArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        private readonly EnumerableNavigator<int> iterator = TestArray.ToNavigator();
 
         [SetUp]
         public void SetUp()
         {
-            navigator = array.ToNavigator();
+            iterator.Reset();
         }
 
         [Test]
         public void TestNext()
         {
-            navigator.TryMoveNext(out var next);
+            iterator.TryMoveNext(out var next);
             
-            Assert.True(next == 1);
+            Assert.True(next == 0);
         }
 
         [Test]
         public void TestLast()
         {
-            navigator.TryMoveNext(out _);
-            navigator.TryMoveLast(out var last);
+            iterator.TryMoveNext(out _);
+            iterator.TryMoveNext(out _);
+            iterator.TryMoveLast(out var last);
             
             Assert.True(last == 0);
         }
@@ -37,43 +38,49 @@ namespace Jammo.ParserTools_Tests
         [Test]
         public void TestSkip()
         {
-            navigator.Skip(5);
+            iterator.Skip(5);
             
-            Assert.True(navigator.Current == 5);
+            Assert.True(iterator.Current == 5);
         }
 
         [Test]
         public void TestSkipWhile()
         {
-            navigator.SkipWhile(i => i < 9);
+            iterator.SkipWhile(i => i < 9);
             
-            Assert.True(navigator.Current == 9);
+            Assert.True(iterator.Current == 9);
         }
 
         [Test]
         public void TestTake()
         {
-            Assert.True(navigator.Take(9).Sum() == 45);    
+            Assert.True(iterator.Take(10).Sum() == 45);    
         }
         
         [Test]
         public void TestTakeIf()
         {
-            navigator.TakeIf(i => i == 1, out var match);
+            iterator.TakeIf(i => i == 0, out var match);
             
-            Assert.True(match == 1);
+            Assert.True(match == 0);
         }
 
         [Test]
         public void TestTakeWhile()
         {
-            Assert.True(navigator.TakeWhile(i => i < 10).Sum() == 45);
+            Assert.True(iterator.TakeWhile(i => i < 10).Sum() == 45);
         }
 
         [Test]
         public void TestEnumerateOnce()
         {
-            Assert.True(navigator.EnumerateOnce().Sum() == 45);
+            Assert.True(iterator.EnumerateOnce().Sum() == 45);
+        }
+        
+        [Test]
+        public void TestInvalidIndex()
+        {
+            Assert.Catch<InvalidOperationException>(delegate { var unused = iterator.Current; });
         }
     }
 }

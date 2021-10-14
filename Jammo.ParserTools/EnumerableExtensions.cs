@@ -8,5 +8,10 @@ namespace Jammo.ParserTools
         {
             return new EnumerableNavigator<T>(enumerable);
         }
+
+        public static EnumerableIterator<T> ToIterator<T>(this IEnumerable<T> enumerable)
+        {
+            return new EnumerableIterator<T>(enumerable);
+        }
     }
 }
