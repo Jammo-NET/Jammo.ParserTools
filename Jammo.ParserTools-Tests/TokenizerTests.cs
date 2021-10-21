@@ -13,7 +13,7 @@ namespace Jammo.ParserTools_Tests
         {
             var tokenizer = new Tokenizer("Some Text");
             
-            Assert.True(tokenizer.Next().Text == "Some");
+            Assert.True(tokenizer.First().Text == "Some");
         }
 
         [Test]
@@ -22,7 +22,7 @@ namespace Jammo.ParserTools_Tests
             var testString = "abc123";
             var tokenizer = new Tokenizer(testString);
             
-            Assert.True(tokenizer.Next().Type == BasicTokenType.Alphabetical);
+            Assert.True(tokenizer.First().Type == BasicTokenType.Alphabetical);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace Jammo.ParserTools_Tests
             var testString = "abc";
             var tokenizer = new Tokenizer(testString);
             
-            Assert.True(tokenizer.Next().Type == BasicTokenType.Alphabetical);
+            Assert.True(tokenizer.First().Type == BasicTokenType.Alphabetical);
         }
 
         [Test]

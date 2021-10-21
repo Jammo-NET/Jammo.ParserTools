@@ -11,8 +11,6 @@ namespace Jammo.ParserTools
         private readonly string text;
         private readonly TokenizerOptions options;
 
-        public int Index { get; private set; }
-
         public Tokenizer(string input, TokenizerOptions options = null)
         {
             text = input;
@@ -24,60 +22,37 @@ namespace Jammo.ParserTools
             return new Tokenizer(input, options);
         }
 
-        public void Reset()
+        public IEnumerator<BasicToken> GetEnumerator()
         {
-            Index = 0;
-        }
-
-        public void Skip(int count = 1)
-        {
-            for (var c = 0; c < count; c++)
-            {
-                if (Next() == null)
-                    break;
-            }
-        }
-
-        public void SkipWhile(Func<BasicToken, bool> predicate)
-        {
+            var index = 0;
+            
             BasicToken token;
-            while ((token = PeekNext()) != null)
+            while ((token = GetNext(index)) != null)
             {
-                if (!predicate.Invoke(token))
-                    break;
-
-                Next();
+                index += token.Span.Size;
+                yield return token;
             }
         }
 
-        public BasicToken Next()
+        private BasicToken GetNext(int index)
         {
-            var token = PeekNext();
-            
-            Index += token?.Text.Length ?? 0;
-            
-            return token;
-        }
-
-        public BasicToken PeekNext()
-        {
-            if (text.Length == Index)
+            if (index == text.Length)
                 return null;
 
-            var trimmed = string.Concat(text.Skip(Index));
+            var trimmed = string.Concat(text.Skip(index));
             var first = trimmed.First();
             var currentRead = string.Empty;
 
             if (char.IsPunctuation(first))
             {
                 return new BasicToken(first.ToString(),
-                    BasicTokenType.Punctuation, new IndexSpan(Index, Index + 1));
+                    BasicTokenType.Punctuation, new IndexSpan(index, index + 1));
             }
             
             if (char.IsSymbol(first))
             {
                 return new BasicToken(first.ToString(),
-                    BasicTokenType.Symbol, new IndexSpan(Index, Index + 1));
+                    BasicTokenType.Symbol, new IndexSpan(index, index + 1));
             }
 
             if (char.IsWhiteSpace(first))
@@ -93,13 +68,13 @@ namespace Jammo.ParserTools
                         return new BasicToken(
                             currentRead,
                             BasicTokenType.Newline,
-                            new IndexSpan(Index, Index + currentRead.Length));
+                            new IndexSpan(index, index + currentRead.Length));
                 }
                 
                 return new BasicToken(
                     currentRead,
                     BasicTokenType.Whitespace, 
-                    new IndexSpan(Index, Index + currentRead.Length));
+                    new IndexSpan(index, index + currentRead.Length));
             } 
             
             if (char.IsLetter(first))
@@ -117,7 +92,7 @@ namespace Jammo.ParserTools
                 return new BasicToken(
                     currentRead,
                     BasicTokenType.Alphabetical, 
-                    new IndexSpan(Index, Index + currentRead.Length));
+                    new IndexSpan(index, index + currentRead.Length));
             }
             
             if (char.IsNumber(first))
@@ -127,17 +102,10 @@ namespace Jammo.ParserTools
                 return new BasicToken(
                     currentRead,
                     BasicTokenType.Numerical, 
-                    new IndexSpan(Index, Index + currentRead.Length));
+                    new IndexSpan(index, index + currentRead.Length));
             }
 
-            return new BasicToken(first.ToString(), BasicTokenType.Unhandled, new IndexSpan(Index, Index + 1));
-        }
-
-        public IEnumerator<BasicToken> GetEnumerator()
-        {
-            BasicToken token;
-            while ((token = Next()) != null)
-                yield return token;
+            return new BasicToken(first.ToString(), BasicTokenType.Unhandled, new IndexSpan(index, index + 1));
         }
 
         IEnumerator IEnumerable.GetEnumerator()

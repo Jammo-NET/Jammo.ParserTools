@@ -36,7 +36,7 @@ namespace Jammo.ParserTools
 
         public void Skip(int count = 1)
         {
-            for (var c = 0; c <= count; c++)
+            for (var c = 0; c < count; c++)
             {
                 if (!TryMoveNext(out _))
                     break;
@@ -45,10 +45,8 @@ namespace Jammo.ParserTools
 
         public void SkipWhile(Func<T, bool> predicate)
         {
-            while (TryPeekNext(out var item))
+            while (TryMoveNext(out var item))
             {
-                TryMoveNext(out _);
-                
                 if (!predicate.Invoke(item))
                     break;
             }
@@ -89,8 +87,13 @@ namespace Jammo.ParserTools
 
         public IEnumerable<T> TakeWhile(Func<T, bool> predicate)
         {
-            while (TakeIf(predicate, out var item))
+            while (TryMoveNext(out var item))
+            {
+                if (!predicate.Invoke(item))
+                    break;
+
                 yield return item;
+            }
         }
 
         public IEnumerable<T> EnumerateFromIndex()

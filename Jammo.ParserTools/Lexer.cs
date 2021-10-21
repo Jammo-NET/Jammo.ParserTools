@@ -58,44 +58,19 @@ namespace Jammo.ParserTools
             return new Lexer(new Tokenizer(input, tokenizerOptions), lexerOptions);
         }
 
-        public void Reset()
+        public IEnumerator<LexerToken> GetEnumerator()
         {
-            Tokenizer.Reset();
-        }
+            var navigator = Tokenizer.ToNavigator();
 
-        public void Skip(int count = 1)
-        {
-            for (var c = 0; c < count; c++)
+            foreach (var _ in navigator.EnumerateFromIndex())
             {
-                if (Next() == null)
-                    break;
+                yield return TransformToken(navigator);
             }
         }
 
-        public void SkipWhile(Func<LexerToken, bool> predicate)
+        private LexerToken TransformToken(EnumerableNavigator<BasicToken> navigator)
         {
-            LexerToken token;
-            while ((token = PeekNext()) != null)
-            {
-                if (!predicate.Invoke(token))
-                    break;
-
-                Next();
-            }
-        }
-
-        public LexerToken Next()
-        {
-            return PeekNext();
-        }
-
-        public LexerToken PeekNext()
-        {
-            var token = Tokenizer.Next();
-            
-            if (token == null)
-                return null;
-            
+            var token = navigator.Current;
             var relevantTokens = new BasicTokenCollection { token };
             
             switch (token.Type)
@@ -111,9 +86,8 @@ namespace Jammo.ParserTools
                         if (token.Text != "_")
                             return new LexerToken(token, SymbolIdFromBasicToken(token));
                     }
-
-                    BasicToken peekToken;
-                    while ((peekToken = Tokenizer.PeekNext()) != null)
+                    
+                    while (navigator.TryPeekNext(out var peekToken))
                     {
                         switch (peekToken.Type)
                         {
@@ -134,7 +108,7 @@ namespace Jammo.ParserTools
                             }
                         }
 
-                        Tokenizer.Next();
+                        navigator.Skip();
                     }
                     
                     if (relevantTokens.ToString().Any(char.IsNumber))
@@ -144,15 +118,14 @@ namespace Jammo.ParserTools
                 }
                 case BasicTokenType.Numerical:
                 {
-                    BasicToken peekToken;
-                    while ((peekToken = Tokenizer.PeekNext()) != null)
+                    while (navigator.TryPeekNext(out var peekToken))
                     {
                         switch (peekToken.Type)
                         {
                             case BasicTokenType.Numerical:
                             {
                                 relevantTokens.Add(peekToken);
-
+                                
                                 break;
                             }
                             case BasicTokenType.Punctuation:
@@ -169,8 +142,8 @@ namespace Jammo.ParserTools
                             default:
                                 return new LexerToken(relevantTokens.ToString(), LexerTokenId.Numeric);
                         }
-
-                        Tokenizer.Next();
+                        
+                        navigator.Skip();
                     }
 
                     return new LexerToken(relevantTokens.ToString(), LexerTokenId.Numeric);
@@ -182,13 +155,12 @@ namespace Jammo.ParserTools
                 case BasicTokenType.Newline:
                 case BasicTokenType.Whitespace:
                 {
-                    BasicToken peekToken;
-                    while ((peekToken = Tokenizer.PeekNext()) != null)
+                    while (navigator.TryPeekNext(out var peekToken))
                     {
                         if (peekToken.Type is not BasicTokenType.Whitespace or BasicTokenType.Newline)
                             break;
 
-                        Tokenizer.Next();
+                        navigator.Skip();
                         
                         relevantTokens.Add(peekToken);
                     }
@@ -203,7 +175,7 @@ namespace Jammo.ParserTools
 
             return new LexerToken(token, SymbolIdFromBasicToken(token));
         }
-
+        
         public static LexerTokenId SymbolIdFromBasicToken(BasicToken token)
         {
             return token.Text switch
@@ -242,15 +214,6 @@ namespace Jammo.ParserTools
                 "?" => LexerTokenId.QuestionMark,
                 _ => LexerTokenId.Unknown
             };
-        }
-
-        public IEnumerator<LexerToken> GetEnumerator()
-        {
-            LexerToken token;
-            while ((token = Next()) != null)
-            {
-                yield return token;
-            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

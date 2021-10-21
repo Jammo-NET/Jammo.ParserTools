@@ -40,7 +40,7 @@ namespace Jammo.ParserTools_Tests
         {
             iterator.Skip(5);
             
-            Assert.True(iterator.Current == 5);
+            Assert.True(iterator.Current == 4);
         }
 
         [Test]

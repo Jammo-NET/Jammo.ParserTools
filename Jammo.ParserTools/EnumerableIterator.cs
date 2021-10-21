@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Jammo.ParserTools
@@ -8,9 +9,11 @@ namespace Jammo.ParserTools
         private readonly IEnumerator<T> enumerator;
         
         private T previous;
-        private bool startedEnumeration;
 
-        public bool AtEnd;
+        public bool Started { get; private set; }
+        public bool AtEnd { get; private set; }
+
+        public T Current => enumerator.Current;
 
         public EnumerableIterator(IEnumerable<T> enumerable)
         {
@@ -18,9 +21,33 @@ namespace Jammo.ParserTools
             enumerator = enumerable.GetEnumerator();
         }
 
-        public bool TryMoveNext(out T result)
+        public IEnumerable<T> Enumerate()
         {
-            return TryGetNextInternal(out result);
+            while (TryMoveNext(out var next))
+                yield return next;
+        }
+
+        public bool TryMoveNext(out T next)
+        {
+            next = default;
+
+            if (Started)
+                previous = enumerator.Current;
+            
+            if (enumerator.MoveNext())
+            {
+                Started = true;
+                next = enumerator.Current;
+                
+                return true;
+            }
+            else
+            {
+                Started = true;
+                AtEnd = true;
+
+                return false;
+            }
         }
 
         public bool TryGetPrevious(out T result)
@@ -30,33 +57,53 @@ namespace Jammo.ParserTools
             return previous == null;
         }
 
-        public void Reset()
+        public void Skip(int count = 1)
         {
-            startedEnumeration = false;
-            enumerator.Reset();
+            for (var c = 0; c < count; c++)
+            {
+                if (!TryMoveNext(out _))
+                    break;
+            }
         }
 
-        private bool TryGetNextInternal(out T next)
+        public void SkipWhile(Func<T, bool> predicate)
         {
-            next = default;
-
-            if (startedEnumeration)
-                previous = enumerator.Current;
-            // TODO: Fix bug because enumerator works different and starts at the first item
-            if (enumerator.MoveNext())
+            while (TryMoveNext(out var item))
             {
-                startedEnumeration = true;
-                next = enumerator.Current;
+                if (!predicate.Invoke(item))
+                    break;
+            }
+        }
+
+        public IEnumerable<T> Take(int count)
+        {
+            for (var c = 0; c < count; c++)
+            {
+                if (AtEnd)
+                    break;
                 
-                return true;
-            }
-            else
-            {
-                startedEnumeration = true;
-                AtEnd = true;
+                if (!TryMoveNext(out var item))
+                    break;
 
-                return false;
+                yield return item;
             }
+        }
+
+        public IEnumerable<T> TakeWhile(Func<T, bool> predicate)
+        {
+            while (TryMoveNext(out var next))
+            {
+                if (!predicate.Invoke(next))
+                    break;
+
+                yield return next;
+            }
+        }
+
+        public void Reset()
+        {
+            Started = false;
+            enumerator.Reset();
         }
     }
 }

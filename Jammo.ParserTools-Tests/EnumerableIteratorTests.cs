@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Jammo.ParserTools;
 using NUnit.Framework;
 
@@ -6,13 +8,13 @@ namespace Jammo.ParserTools_Tests
     [TestFixture]
     public class EnumerableIteratorTests
     {
-        private static readonly int[] TestArray = { 0, 1 };
-        private readonly EnumerableIterator<int> iterator = TestArray.ToIterator();
+        private static readonly int[] TestArray = { 0, 1, 2, 3 };
+        private EnumerableIterator<int> iterator;
 
         [SetUp]
         public void SetUp()
         {
-            iterator.Reset();
+            iterator = TestArray.ToIterator();
         }
         
         [Test]
@@ -42,6 +44,34 @@ namespace Jammo.ParserTools_Tests
             iterator.TryMoveNext(out _);
             
             Assert.True(iterator.AtEnd);
+        }
+        
+        [Test]
+        public void TestSkip()
+        {
+            iterator.Skip(4);
+            
+            Assert.True(iterator.Current == 3);
+        }
+
+        [Test]
+        public void TestSkipWhile()
+        {
+            iterator.SkipWhile(i => i < 3);
+            
+            Assert.True(iterator.Current == 3);
+        }
+
+        [Test]
+        public void TestTake()
+        {
+            Assert.True(iterator.Take(4).Sum() == 6);    
+        }
+
+        [Test]
+        public void TestTakeWhile()
+        {
+            Assert.True(iterator.TakeWhile(i => i < 4).Sum() == 6);
         }
     }
 }
