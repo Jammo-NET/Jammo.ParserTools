@@ -5,16 +5,18 @@
         <Description>Tools I use frequently for text parsing</Description>
         <RepositoryUrl>https://github.com/Jammo-NET/Jammo.ParserTools</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>MAJOR CHANGE
+        <PackageReleaseNotes>Minor changes to Tokenizer and Lexer
 
-EnumerableNavigator now starts at the index -1 instead of 0. In the old model, the user was forced to use a do..while loop to encapsulate every item.
+Remove Next, PeekNext, Skip, SkipWhile, and TakeWhile from both classes
+in favor of using EnumerabieNavigator and EnumerableIterator
 
-Add EnumerableIterator, a lightweight version of EnumerableNavigator that is moreso a wrapper for IEnumerators</PackageReleaseNotes>
+Replace Tokenizer and Lexer IEnumerable implementation with a basic loop
+Add missing methods to EnumerableIterator (Skip, SkipWhile, etc)</PackageReleaseNotes>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Jammo.ParserTools</Title>
         <Authors>zeplar exe</Authors>
         <PackageLicenseUrl>https://github.com/Jammo-NET/Jammo.ParserTools/blob/master/LICENSE</PackageLicenseUrl>
-        <PackageVersion>1.4.0</PackageVersion>
+        <PackageVersion>1.5.0</PackageVersion>
         <LangVersion>9</LangVersion>
     </PropertyGroup>
 

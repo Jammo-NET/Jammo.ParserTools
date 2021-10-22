@@ -37,19 +37,19 @@ namespace Jammo.ParserTools_Tests
         [Test]
         public void TestNumeric()
         {
-            var testString = "aaa 123";
+            var testString = "aaa 123 bbb 456";
             var tokenizer = Tokenizer.Tokenize(testString).ToArray();
             
             Assert.True(tokenizer[2].Type == BasicTokenType.Numerical);
         }
-        
+
         [Test]
-        public void TestMultiNumeric()
+        public void TestIgnorable()
         {
-            var testString = "aaa 123 bbb 456";
-            var tokenizer = Tokenizer.Tokenize(testString).ToArray();
+            var testString = "              Human";
+            var tokenizer = Tokenizer.Tokenize(testString, new TokenizerOptions(BasicTokenType.Whitespace));
             
-            Assert.True(tokenizer[2].ToString() == "123");
+            Assert.True(tokenizer.First().Text == "Human");
         }
     }
 }

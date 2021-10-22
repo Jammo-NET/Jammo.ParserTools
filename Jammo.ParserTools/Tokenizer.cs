@@ -30,6 +30,10 @@ namespace Jammo.ParserTools
             while ((token = GetNext(index)) != null)
             {
                 index += token.Span.Size;
+                
+                if (options.Ignorable.Contains(token.Type))
+                    continue;
+                
                 yield return token;
             }
         }
