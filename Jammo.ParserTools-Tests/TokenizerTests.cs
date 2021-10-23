@@ -40,16 +40,7 @@ namespace Jammo.ParserTools_Tests
             var testString = "aaa 123 bbb 456";
             var tokenizer = Tokenizer.Tokenize(testString).ToArray();
             
-            Assert.True(tokenizer[2].Type == BasicTokenType.Numerical);
-        }
-
-        [Test]
-        public void TestIgnorable()
-        {
-            var testString = "              Human";
-            var tokenizer = Tokenizer.Tokenize(testString, new TokenizerOptions(BasicTokenType.Whitespace));
-            
-            Assert.True(tokenizer.First().Text == "Human");
+            Assert.True(tokenizer.ElementAt(2).Type == BasicTokenType.Numerical);
         }
     }
 }

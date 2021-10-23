@@ -7,7 +7,7 @@ namespace Jammo.ParserTools
     public class EnumerableNavigator<T>
     {
         private readonly T[] array;
-
+        
         public int Index { get; private set; } = -1;
         public bool Started => Index > -1;
 
@@ -104,8 +104,14 @@ namespace Jammo.ParserTools
 
         public IEnumerable<T> EnumerateOnce()
         {
-            foreach (var item in array)
+            var oldIndex = Index;
+            
+            Reset();
+
+            foreach (var item in EnumerateFromIndex())
                 yield return item;
+
+            Index = oldIndex;
         }
 
         public bool TryPeekNext(out T result)
@@ -140,6 +146,7 @@ namespace Jammo.ParserTools
                 return false;
             
             result = array[Index - 1];
+            
             return true;
         }
 

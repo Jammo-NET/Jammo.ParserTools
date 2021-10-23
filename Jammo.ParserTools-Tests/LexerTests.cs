@@ -66,5 +66,14 @@ namespace Jammo.ParserTools_Tests
             
             Assert.True(tokens.First().RawToken == "Hello");
         }
+
+        [Test]
+        public void TestTokenizerOptions()
+        {
+            var testString = "Abc              Human";
+            var navigator = new Lexer(testString, new LexerOptions(t => t.Is(LexerTokenId.Whitespace))).ToNavigator();
+            
+            Assert.True(navigator.EnumerateOnce().ElementAt(1).RawToken == "Human");
+        }
     }
 }

@@ -64,7 +64,12 @@ namespace Jammo.ParserTools
 
             foreach (var _ in navigator.EnumerateFromIndex())
             {
-                yield return TransformToken(navigator);
+                var token = TransformToken(navigator);
+                
+                if (options.IgnorePredicate.Invoke(token))
+                    continue;
+
+                yield return token;
             }
         }
 
@@ -153,6 +158,9 @@ namespace Jammo.ParserTools
                     return new LexerToken(token, SymbolIdFromBasicToken(token));
                 }
                 case BasicTokenType.Newline:
+                {
+                    return new LexerToken(token, LexerTokenId.Newline);
+                }
                 case BasicTokenType.Whitespace:
                 {
                     while (navigator.TryPeekNext(out var peekToken))
@@ -165,7 +173,7 @@ namespace Jammo.ParserTools
                         relevantTokens.Add(peekToken);
                     }
                     
-                    return new LexerToken(relevantTokens.ToString(), LexerTokenId.Space);
+                    return new LexerToken(relevantTokens.ToString(), LexerTokenId.Whitespace);
                 }
                 case BasicTokenType.Unhandled:
                 {
@@ -224,65 +232,14 @@ namespace Jammo.ParserTools
 
     public class LexerOptions
     {
+        internal readonly Func<LexerToken, bool> IgnorePredicate;
+
         public bool IncludeUnderscoreAsAlphabetic;
         public bool IncludePeriodAsNumeric;
-    }
 
-    public class LexerToken
-    {
-        public readonly string RawToken;
-        public readonly BasicToken Token;
-        public readonly LexerTokenId Id;
-
-        public LexerToken(BasicToken token, LexerTokenId id)
+        public LexerOptions(Func<LexerToken, bool> ignorePredicate = null)
         {
-            RawToken = token.ToString();
-            Token = token;
-            Id = id;
+            IgnorePredicate = ignorePredicate ?? delegate { return false; };
         }
-        
-        public LexerToken(string raw, LexerTokenId id)
-        {
-            RawToken = raw;
-            Id = id;
-        }
-
-        public bool Is(LexerTokenId id) => Id == id;
-
-        public override string ToString()
-        {
-            return RawToken;
-        }
-    }
-
-    public enum LexerTokenId
-    {
-        Unknown = 0,
-        
-        Alphabetic, AlphaNumeric, Numeric,
-        
-        Plus, Dash, Star, Equals, LessThan, GreaterThan,
-        Slash, Backslash,
-        
-        NewLine, Space,
-        
-        LeftParenthesis, RightParenthesis,
-        OpenBracket, CloseBracket,
-        OpenCurlyBracket, CloseCurlyBracket,
-
-        Tilde, Slave,
-        Quote, DoubleQuote,
-        Period, Comma, Colon, Semicolon,
-        
-        ExclamationMark, 
-        At,
-        Octothorpe,
-        Dollar,
-        Percent,
-        Caret,
-        Amphersand,
-        Underscore,
-        Vertical,
-        QuestionMark
     }
 }

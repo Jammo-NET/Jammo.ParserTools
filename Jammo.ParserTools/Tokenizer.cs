@@ -31,9 +31,6 @@ namespace Jammo.ParserTools
             {
                 index += token.Span.Size;
                 
-                if (options.Ignorable.Contains(token.Type))
-                    continue;
-                
                 yield return token;
             }
         }
@@ -83,15 +80,7 @@ namespace Jammo.ParserTools
             
             if (char.IsLetter(first))
             {
-                foreach (var character in trimmed)
-                {
-                    if (char.IsLetter(character))
-                        currentRead += character;
-                    else if (char.IsNumber(character) && !options.SeparateAlphanumerical)
-                        currentRead += character;
-                    else
-                        break;
-                }
+                currentRead += string.Concat(trimmed.TakeWhile(c => char.IsLetter(c) || char.IsNumber(c)));
                 
                 return new BasicToken(
                     currentRead,
@@ -147,13 +136,7 @@ namespace Jammo.ParserTools
     
     public class TokenizerOptions
     {
-        public bool SeparateAlphanumerical;
-        public readonly BasicTokenType[] Ignorable;
-
-        public TokenizerOptions(params BasicTokenType[] ignorable)
-        {
-            Ignorable = ignorable;
-        }
+        
     }
 
     public enum BasicTokenType
