@@ -5,12 +5,14 @@
         <Description>Tools I use frequently for text parsing</Description>
         <RepositoryUrl>https://github.com/Jammo-NET/Jammo.ParserTools</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Re-implement Tokenizer ignorables via TokenizerOptions</PackageReleaseNotes>
+        <PackageReleaseNotes>Reworked ignorables
+
+Move ignorable options (now uses a predicate constructor argument) from TokenizerOptions to LexerOptions</PackageReleaseNotes>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Jammo.ParserTools</Title>
         <Authors>zeplar exe</Authors>
         <PackageLicenseUrl>https://github.com/Jammo-NET/Jammo.ParserTools/blob/master/LICENSE</PackageLicenseUrl>
-        <PackageVersion>1.5.1</PackageVersion>
+        <PackageVersion>1.5.2</PackageVersion>
         <LangVersion>9</LangVersion>
     </PropertyGroup>
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Jammo.ParserTools
@@ -10,6 +9,7 @@ namespace Jammo.ParserTools
     {
         private readonly string text;
         private readonly TokenizerOptions options;
+        private StringContext context;
 
         public Tokenizer(string input, TokenizerOptions options = null)
         {
@@ -24,36 +24,45 @@ namespace Jammo.ParserTools
 
         public IEnumerator<BasicToken> GetEnumerator()
         {
-            var index = 0;
-            
-            BasicToken token;
-            while ((token = GetNext(index)) != null)
+            context = new StringContext(0, 0);
+
+            foreach (var line in text.Split(Environment.NewLine))
             {
-                index += token.Span.Size;
+                var index = 0;
                 
-                yield return token;
+                BasicToken token;
+                while ((token = GetNext(line, index)) != null)
+                {
+                    context = context.MoveColumn(token.Span.Size);
+
+                    index += token.Span.Size;
+
+                    yield return token;
+                }
+                
+                context = context.MoveLine();
             }
         }
 
-        private BasicToken GetNext(int index)
+        private BasicToken GetNext(string partial, int index)
         {
-            if (index == text.Length)
+            if (index == partial.Length)
                 return null;
 
-            var trimmed = string.Concat(text.Skip(index));
+            var trimmed = string.Concat(partial.Skip(index));
             var first = trimmed.First();
             var currentRead = string.Empty;
 
             if (char.IsPunctuation(first))
             {
                 return new BasicToken(first.ToString(),
-                    BasicTokenType.Punctuation, new IndexSpan(index, index + 1));
+                    BasicTokenType.Punctuation, new IndexSpan(index, index + 1), context);
             }
             
             if (char.IsSymbol(first))
             {
                 return new BasicToken(first.ToString(),
-                    BasicTokenType.Symbol, new IndexSpan(index, index + 1));
+                    BasicTokenType.Symbol, new IndexSpan(index, index + 1), context);
             }
 
             if (char.IsWhiteSpace(first))
@@ -64,18 +73,12 @@ namespace Jammo.ParserTools
                         break;
                     
                     currentRead += character;
-                    
-                    if (currentRead == Environment.NewLine)
-                        return new BasicToken(
-                            currentRead,
-                            BasicTokenType.Newline,
-                            new IndexSpan(index, index + currentRead.Length));
                 }
                 
                 return new BasicToken(
                     currentRead,
                     BasicTokenType.Whitespace, 
-                    new IndexSpan(index, index + currentRead.Length));
+                    new IndexSpan(index, index + currentRead.Length), context);
             } 
             
             if (char.IsLetter(first))
@@ -85,7 +88,7 @@ namespace Jammo.ParserTools
                 return new BasicToken(
                     currentRead,
                     BasicTokenType.Alphabetical, 
-                    new IndexSpan(index, index + currentRead.Length));
+                    new IndexSpan(index, index + currentRead.Length), context);
             }
             
             if (char.IsNumber(first))
@@ -95,10 +98,14 @@ namespace Jammo.ParserTools
                 return new BasicToken(
                     currentRead,
                     BasicTokenType.Numerical, 
-                    new IndexSpan(index, index + currentRead.Length));
+                    new IndexSpan(index, index + currentRead.Length), context);
             }
 
-            return new BasicToken(first.ToString(), BasicTokenType.Unhandled, new IndexSpan(index, index + 1));
+            return new BasicToken(
+                first.ToString(), 
+                BasicTokenType.Unhandled, 
+                new IndexSpan(index, index + 1), 
+                context);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -106,34 +113,7 @@ namespace Jammo.ParserTools
             return GetEnumerator();
         }
     }
-    
-    public class BasicTokenCollection : Collection<BasicToken>
-    {
-        public override string ToString()
-        {
-            return string.Concat(this.Select(token => token.Text));
-        }
-    }
 
-    public class BasicToken
-    {
-        public readonly string Text;
-        public readonly BasicTokenType Type;
-        public readonly IndexSpan Span;
-
-        public BasicToken(string text, BasicTokenType type, IndexSpan span)
-        {
-            Text = text;
-            Type = type;
-            Span = span;
-        }
-
-        public override string ToString()
-        {
-            return Text;
-        }
-    }
-    
     public class TokenizerOptions
     {
         

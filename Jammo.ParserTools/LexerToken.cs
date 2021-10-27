@@ -2,12 +2,16 @@ namespace Jammo.ParserTools
 {
     public class LexerToken
     {
+        public StringContext Context => Token.Context;
+        public IndexSpan Span => Token.Span;
+        
         public readonly string RawToken;
         public readonly BasicToken Token;
         public readonly LexerTokenId Id;
 
         public LexerToken(BasicToken token, LexerTokenId id)
         {
+            
             RawToken = token.ToString();
             Token = token;
             Id = id;

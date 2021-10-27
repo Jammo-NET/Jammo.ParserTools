@@ -38,9 +38,18 @@ namespace Jammo.ParserTools_Tests
         public void TestNumeric()
         {
             var testString = "aaa 123 bbb 456";
-            var tokenizer = Tokenizer.Tokenize(testString).ToArray();
+            var tokenizer = Tokenizer.Tokenize(testString);
             
             Assert.True(tokenizer.ElementAt(2).Type == BasicTokenType.Numerical);
+        }
+
+        [Test]
+        public void TestContext()
+        {
+            var testString = $"HELLO {Environment.NewLine} WORLD";
+            var tokenizer = Tokenizer.Tokenize(testString);
+            
+            Assert.True(tokenizer.ElementAt(2).Context.Line == 1);
         }
     }
 }
