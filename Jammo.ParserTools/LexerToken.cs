@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace Jammo.ParserTools
 {
     public class LexerToken
@@ -17,9 +19,15 @@ namespace Jammo.ParserTools
             Id = id;
         }
         
-        public LexerToken(string raw, LexerTokenId id)
+        public LexerToken(BasicTokenCollection tokens, LexerTokenId id)
         {
-            RawToken = raw;
+            Token = new BasicToken(
+                tokens.ToString(),
+                BasicTokenType.Unhandled,
+                new IndexSpan(tokens.First().Span.Start, tokens.Last().Span.End),
+                tokens.First().Context);
+            
+            RawToken = Token.ToString();
             Id = id;
         }
 

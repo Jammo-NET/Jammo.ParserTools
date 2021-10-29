@@ -71,9 +71,18 @@ namespace Jammo.ParserTools_Tests
         public void TestTokenizerOptions()
         {
             var testString = "Abc              Human";
-            var navigator = new Lexer(testString, new LexerOptions(t => t.Is(LexerTokenId.Whitespace))).ToNavigator();
+            var lexer = new Lexer(testString, new LexerOptions(t => t.Is(LexerTokenId.Whitespace)));
             
-            Assert.True(navigator.EnumerateOnce().ElementAt(1).RawToken == "Human");
+            Assert.True(lexer.ElementAt(1).RawToken == "Human");
+        }
+
+        [Test]
+        public void TestMultiTokenContext()
+        {
+            var testString = "abc_";
+            var lexer = new Lexer(testString, new LexerOptions { IncludeUnderscoreAsAlphabetic = true });
+            
+            Assert.True(lexer.First().Context.Column == 0);
         }
     }
 }

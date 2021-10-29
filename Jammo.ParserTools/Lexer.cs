@@ -98,18 +98,18 @@ namespace Jammo.ParserTools
                         {
                             case BasicTokenType.Alphabetical:
                             case BasicTokenType.Numerical:
-                            case BasicTokenType.Symbol when peekToken.Text == "_" && options.IncludeUnderscoreAsAlphabetic:
+                            case BasicTokenType.Punctuation when peekToken.Text == "_" && options.IncludeUnderscoreAsAlphabetic:
                             {
                                 relevantTokens.Add(peekToken);
-
+                                
                                 break;
                             }
                             default:
                             {
                                 if (relevantTokens.ToString().Any(char.IsNumber))
-                                    return new LexerToken(relevantTokens.ToString(), LexerTokenId.AlphaNumeric);
+                                    return new LexerToken(relevantTokens, LexerTokenId.AlphaNumeric);
                                 
-                                return new LexerToken(relevantTokens.ToString(), LexerTokenId.Alphabetic);
+                                return new LexerToken(relevantTokens, LexerTokenId.Alphabetic);
                             }
                         }
 
@@ -117,9 +117,9 @@ namespace Jammo.ParserTools
                     }
                     
                     if (relevantTokens.ToString().Any(char.IsNumber))
-                        return new LexerToken(relevantTokens.ToString(), LexerTokenId.AlphaNumeric);
+                        return new LexerToken(relevantTokens, LexerTokenId.AlphaNumeric);
                     
-                    return new LexerToken(token, LexerTokenId.Alphabetic);
+                    return new LexerToken(relevantTokens, LexerTokenId.Alphabetic);
                 }
                 case BasicTokenType.Numerical:
                 {
@@ -142,16 +142,16 @@ namespace Jammo.ParserTools
                                     break;
                                 }
                                 
-                                return new LexerToken(relevantTokens.ToString(), LexerTokenId.Numeric);
+                                return new LexerToken(relevantTokens, LexerTokenId.Numeric);
                             }
                             default:
-                                return new LexerToken(relevantTokens.ToString(), LexerTokenId.Numeric);
+                                return new LexerToken(relevantTokens, LexerTokenId.Numeric);
                         }
                         
                         navigator.Skip();
                     }
 
-                    return new LexerToken(relevantTokens.ToString(), LexerTokenId.Numeric);
+                    return new LexerToken(relevantTokens, LexerTokenId.Numeric);
                 }
                 case BasicTokenType.Symbol:
                 {
@@ -173,7 +173,7 @@ namespace Jammo.ParserTools
                         relevantTokens.Add(peekToken);
                     }
                     
-                    return new LexerToken(relevantTokens.ToString(), LexerTokenId.Whitespace);
+                    return new LexerToken(relevantTokens, LexerTokenId.Whitespace);
                 }
                 case BasicTokenType.Unhandled:
                 {
