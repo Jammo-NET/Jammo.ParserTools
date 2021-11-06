@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Jammo.ParserTools
+namespace Jammo.ParserTools.Tokenization
 {
     public class Tokenizer : IEnumerable<BasicToken>
     {
@@ -122,12 +122,14 @@ namespace Jammo.ParserTools
     public enum BasicTokenType
     {
         Unhandled = 0,
-        
+
         Alphabetical,
         Numerical,
         Symbol,
         Punctuation,
         Whitespace,
-        Newline
+        Newline,
+        
+        Conjunction,
     }
 }

@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using Jammo.ParserTools.Tokenization;
+using Jammo.ParserTools.Tools;
 
-namespace Jammo.ParserTools
+namespace Jammo.ParserTools.Lexing
 {
     public class Lexer : IEnumerable<LexerToken>
     {

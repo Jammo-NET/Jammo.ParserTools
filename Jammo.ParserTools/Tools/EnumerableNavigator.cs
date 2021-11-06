@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Jammo.ParserTools
+namespace Jammo.ParserTools.Tools
 {
     public class EnumerableNavigator<T>
     {

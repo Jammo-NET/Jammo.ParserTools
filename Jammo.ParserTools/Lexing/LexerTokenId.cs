@@ -1,4 +1,4 @@
-namespace Jammo.ParserTools
+namespace Jammo.ParserTools.Lexing
 {
     public enum LexerTokenId
     {

@@ -1,6 +1,4 @@
-using System;
-
-namespace Jammo.ParserTools
+namespace Jammo.ParserTools.Tokenization
 {
     public class BasicToken
     {

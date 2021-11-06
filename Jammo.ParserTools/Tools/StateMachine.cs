@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Jammo.ParserTools
+namespace Jammo.ParserTools.Tools
 {
     public class StateMachine<TStates> : IEnumerable<TStates> where TStates : Enum
     {

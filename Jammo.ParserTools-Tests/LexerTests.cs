@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using Jammo.ParserTools;
+using Jammo.ParserTools.Lexing;
+using Jammo.ParserTools.Tokenization;
 using NUnit.Framework;
 
 namespace Jammo.ParserTools_Tests

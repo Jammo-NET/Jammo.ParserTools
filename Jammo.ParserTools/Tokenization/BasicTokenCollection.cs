@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Jammo.ParserTools
+namespace Jammo.ParserTools.Tokenization
 {
     public class BasicTokenCollection : Collection<BasicToken>
     {

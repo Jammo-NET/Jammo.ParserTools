@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Jammo.ParserTools;
+using Jammo.ParserTools.Tools;
 using NUnit.Framework;
 
 namespace Jammo.ParserTools_Tests

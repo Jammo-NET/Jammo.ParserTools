@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Jammo.ParserTools
+namespace Jammo.ParserTools.Tools
 {
     public class EnumerableIterator<T>
     {
