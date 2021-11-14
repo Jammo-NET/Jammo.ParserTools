@@ -87,10 +87,17 @@ namespace Jammo.ParserTools.Tools
 
         public IEnumerable<T> TakeWhile(Func<T, bool> predicate)
         {
-            while (TryMoveNext(out var item))
+            if (Started)
+            {
+                yield return Current;
+            }
+            
+            while (TryPeekNext(out var item))
             {
                 if (!predicate.Invoke(item))
                     break;
+
+                TryMoveNext(out _);
 
                 yield return item;
             }
@@ -98,8 +105,7 @@ namespace Jammo.ParserTools.Tools
 
         public IEnumerable<T> EnumerateFromIndex()
         {
-            while (TryMoveNext(out var item))
-                yield return item;
+            return TakeWhile(_ => true);
         }
 
         public IEnumerable<T> EnumerateOnce()
