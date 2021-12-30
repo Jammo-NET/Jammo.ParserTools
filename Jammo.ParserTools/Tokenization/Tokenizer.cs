@@ -11,13 +11,13 @@ namespace Jammo.ParserTools.Tokenization
         private readonly TokenizerOptions options;
         private StringContext context;
 
-        public Tokenizer(string input, TokenizerOptions options = null)
+        public Tokenizer(string input, TokenizerOptions? options = null)
         {
             text = input;
             this.options = options ?? new TokenizerOptions();
         }
 
-        public static IEnumerable<BasicToken> Tokenize(string input, TokenizerOptions options = null)
+        public static IEnumerable<BasicToken> Tokenize(string input, TokenizerOptions? options = null)
         {
             return new Tokenizer(input, options);
         }
@@ -30,7 +30,7 @@ namespace Jammo.ParserTools.Tokenization
             {
                 var index = 0;
                 
-                BasicToken token;
+                BasicToken? token;
                 while ((token = GetNext(line, index)) != null)
                 {
                     context = context.MoveColumn(token.Span.Size);
@@ -44,7 +44,7 @@ namespace Jammo.ParserTools.Tokenization
             }
         }
 
-        private BasicToken GetNext(string partial, int index)
+        private BasicToken? GetNext(string partial, int index)
         {
             if (index == partial.Length)
                 return null;

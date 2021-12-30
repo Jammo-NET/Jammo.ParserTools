@@ -7,7 +7,7 @@ namespace Jammo.ParserTools.Lexing
     {
         public IndexSpan Span => Token.Span;
         
-        public readonly BasicToken Token;
+        public BasicToken Token { get; }
 
         public LexerToken(BasicToken token, LexerTokenId id) : base(token.ToString(), token.Context, id)
         {

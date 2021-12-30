@@ -54,7 +54,7 @@ namespace Jammo.ParserTools.Lexing
         }
         
         public static IEnumerable<LexerToken> Lex(
-            string input, TokenizerOptions tokenizerOptions, LexerOptions lexerOptions = null)
+            string input, TokenizerOptions tokenizerOptions, LexerOptions? lexerOptions = null)
         {
             return new Lexer(new Tokenizer(input, tokenizerOptions), lexerOptions);
         }

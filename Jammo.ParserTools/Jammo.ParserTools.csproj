@@ -5,14 +5,14 @@
         <Description>Tools I use frequently for text parsing</Description>
         <RepositoryUrl>https://github.com/Jammo-NET/Jammo.ParserTools</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Add namespaces (Lexing, Tokenization, and Tools)
-LexerToken now inherites from GenericLexerToken</PackageReleaseNotes>
+        <PackageReleaseNotes>Update to .NET 6 (hopefully)</PackageReleaseNotes>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Jammo.ParserTools</Title>
         <Authors>zeplar exe</Authors>
         <PackageLicenseUrl>https://github.com/Jammo-NET/Jammo.ParserTools/blob/master/LICENSE</PackageLicenseUrl>
-        <PackageVersion>1.6.0</PackageVersion>
-        <LangVersion>9</LangVersion>
+        <PackageVersion>1.7.1</PackageVersion>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
 </Project>
