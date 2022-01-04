@@ -81,6 +81,48 @@ namespace Jammo.ParserTools.Lexing
             
             switch (token.Type)
             {
+                case BasicTokenType.Punctuation when token.Text == "-":
+                case BasicTokenType.Numerical:
+                {
+                    if (token.Text == "-" && navigator.TakeIf(t => t.Type == BasicTokenType.Numerical, out var n))
+                    {
+                        relevantTokens.Add(n);
+                    }
+                    else if (token.Text == "-")
+                    {
+                        return new LexerToken(token, SymbolIdFromBasicToken(token));
+                    }
+                    
+                    while (navigator.TryPeekNext(out var peekToken))
+                    {
+                        switch (peekToken.Type)
+                        {
+                            case BasicTokenType.Numerical:
+                            {
+                                relevantTokens.Add(peekToken);
+                                
+                                break;
+                            }
+                            case BasicTokenType.Punctuation:
+                            {
+                                if (peekToken.Text == "." && options.IncludePeriodAsNumeric)
+                                {
+                                    relevantTokens.Add(peekToken);
+
+                                    break;
+                                }
+                                
+                                return new LexerToken(relevantTokens, LexerTokenId.Numeric);
+                            }
+                            default:
+                                return new LexerToken(relevantTokens, LexerTokenId.Numeric);
+                        }
+                        
+                        navigator.Skip();
+                    }
+
+                    return new LexerToken(relevantTokens, LexerTokenId.Numeric);
+                }
                 case BasicTokenType.Alphabetical:
                 case BasicTokenType.Punctuation:
                 {
@@ -121,38 +163,6 @@ namespace Jammo.ParserTools.Lexing
                         return new LexerToken(relevantTokens, LexerTokenId.AlphaNumeric);
                     
                     return new LexerToken(relevantTokens, LexerTokenId.Alphabetic);
-                }
-                case BasicTokenType.Numerical:
-                {
-                    while (navigator.TryPeekNext(out var peekToken))
-                    {
-                        switch (peekToken.Type)
-                        {
-                            case BasicTokenType.Numerical:
-                            {
-                                relevantTokens.Add(peekToken);
-                                
-                                break;
-                            }
-                            case BasicTokenType.Punctuation:
-                            {
-                                if (peekToken.Text == "." && options.IncludePeriodAsNumeric)
-                                {
-                                    relevantTokens.Add(peekToken);
-
-                                    break;
-                                }
-                                
-                                return new LexerToken(relevantTokens, LexerTokenId.Numeric);
-                            }
-                            default:
-                                return new LexerToken(relevantTokens, LexerTokenId.Numeric);
-                        }
-                        
-                        navigator.Skip();
-                    }
-
-                    return new LexerToken(relevantTokens, LexerTokenId.Numeric);
                 }
                 case BasicTokenType.Symbol:
                 {

@@ -62,6 +62,14 @@ namespace Jammo.ParserTools_Tests
         }
 
         [Test]
+        public void TestNegative()
+        {
+            var tokens = Lexer.Lex("-01");
+            
+            Assert.True(tokens.First().RawToken == "-01");
+        }
+
+        [Test]
         public void TestDoubleQuote()
         {
             var tokens = Lexer.Lex("Hello \"world\"");
