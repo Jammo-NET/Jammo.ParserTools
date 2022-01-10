@@ -19,6 +19,14 @@ namespace Jammo.ParserTools_Tests
         }
 
         [Test]
+        public void TestNewline()
+        {
+            var tokens = Lexer.Lex(Environment.NewLine);
+            
+            Assert.True(tokens.First().Is(LexerTokenId.Newline));
+        }
+
+        [Test]
         public void TestQuoteId()
         {
             var tokens = Lexer.Lex("'");

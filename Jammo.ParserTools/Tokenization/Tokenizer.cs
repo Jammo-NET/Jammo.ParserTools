@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Jammo.ParserTools.Tokenization
 {
@@ -25,11 +26,13 @@ namespace Jammo.ParserTools.Tokenization
         public IEnumerator<BasicToken> GetEnumerator()
         {
             context = new StringContext(0, 0);
-
-            foreach (var line in text.Split(Environment.NewLine))
+            var regex = Regex.Split(text, @"(\r\n?|\n)");
+            
+            for (var i = 0; i < regex.Length; i++)
             {
+                var line = regex[i];
                 var index = 0;
-                
+                        
                 BasicToken? token;
                 while ((token = GetNext(line, index)) != null)
                 {
@@ -39,7 +42,7 @@ namespace Jammo.ParserTools.Tokenization
 
                     yield return token;
                 }
-                
+
                 context = context.MoveLine();
             }
         }
@@ -50,8 +53,32 @@ namespace Jammo.ParserTools.Tokenization
                 return null;
 
             var trimmed = string.Concat(partial.Skip(index));
-            var first = trimmed.First();
             var currentRead = string.Empty;
+            var navigator = trimmed.ToNavigator();
+            
+            if (!navigator.TryMoveNext(out var first))
+                return null;
+            
+            if (first == '\r')
+            {
+                if (navigator.TakeIf(c => c == '\n', out var newline))
+                {
+                    currentRead += newline;
+                }
+
+                return new BasicToken(
+                    currentRead, 
+                    BasicTokenType.Newline, 
+                    new IndexSpan(index, index + currentRead.Length), context);
+            }
+
+            if (first == '\n')
+            {
+                return new BasicToken(
+                    currentRead, 
+                    BasicTokenType.Newline, 
+                    new IndexSpan(index, index + 1), context);
+            }
 
             if (char.IsPunctuation(first))
             {

@@ -43,6 +43,33 @@ namespace Jammo.ParserTools_Tests
             
             Assert.True(tokenizer.ElementAt(2).Type == BasicTokenType.Numerical);
         }
+        
+        [Test]
+        public void TestNewline()
+        {
+            var testString = "\n";
+            var tokenizer = Tokenizer.Tokenize(testString);
+            
+            Assert.True(tokenizer.First().Type == BasicTokenType.Newline);
+        }
+
+        [Test]
+        public void TestCarriageReturn()
+        {
+            var testString = "\r";
+            var tokenizer = Tokenizer.Tokenize(testString);
+            
+            Assert.True(tokenizer.First().Type == BasicTokenType.Newline);
+        }
+
+        [Test]
+        public void TestCRLF()
+        {
+            var testString = "\r\n";
+            var tokenizer = Tokenizer.Tokenize(testString);
+            
+            Assert.True(tokenizer.First().Type == BasicTokenType.Newline);
+        }
 
         [Test]
         public void TestContext()

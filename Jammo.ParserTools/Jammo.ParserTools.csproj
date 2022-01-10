@@ -5,12 +5,12 @@
         <Description>Tools I use frequently for text parsing</Description>
         <RepositoryUrl>https://github.com/Jammo-NET/Jammo.ParserTools</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Update to .NET 6 (hopefully)</PackageReleaseNotes>
+        <PackageReleaseNotes>Update Lexer to handle negative numbers</PackageReleaseNotes>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Jammo.ParserTools</Title>
         <Authors>zeplar exe</Authors>
         <PackageLicenseUrl>https://github.com/Jammo-NET/Jammo.ParserTools/blob/master/LICENSE</PackageLicenseUrl>
-        <PackageVersion>1.7.1</PackageVersion>
+        <PackageVersion>1.7.2</PackageVersion>
         <LangVersion>10</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
