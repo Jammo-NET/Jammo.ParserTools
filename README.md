@@ -1,3 +1,4 @@
+## This project is discontinued
 # Jammo.ParserTools
 
 Nuget: https://www.nuget.org/packages/Jammo.ParserTools/
